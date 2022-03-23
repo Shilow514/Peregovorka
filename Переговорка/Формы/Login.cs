@@ -81,6 +81,7 @@ namespace Переговорка
                     {
                         if (s[3] == "1")
                         {
+                            User.ping = Convert.ToInt32(s[0]);
                             MessageBox.Show("Вы вошли как администратор");
                             this.Hide();
                             AdminMain adminMain = new AdminMain();
@@ -96,6 +97,7 @@ namespace Переговорка
                         }
                         if (s[3] == "3")
                         {
+                            User.ping = Convert.ToInt32(s[0]);
                             MessageBox.Show("Вы вошли как инициатор");
                             this.Hide();
                             OrganizerMain organizerMain = new OrganizerMain();
@@ -120,7 +122,7 @@ namespace Переговорка
             string loginCount = "SELECT [Логин] FROM [dbo].[Аккаунты] WHERE Логин LIKE ('" + registrationName.Text + "')";
             SqlCommand countCommand = new SqlCommand(loginCount, connection);
             SqlDataReader reader = countCommand.ExecuteReader();
-            string lastId = "SELECT COUNT(*)FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Аккаунты'";
+            string lastId = "SELECT COUNT(idAccount) From Аккаунты";
             int id = lastIdCheck(lastId);
             if (reader.HasRows == true)
             {

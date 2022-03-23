@@ -25,9 +25,10 @@ namespace Переговорка
             login.Show();
         }
         public string connection = "Data Source=PIT29\\SHILOV;Initial Catalog=meeting_db;User ID=sa;Password=123";
-        public string viewTableCommandNow = "";
-        public string viewTableUpdate = "";
-        public string viewIdNow = "";
+        public string viewTableCommandNow;
+        public string viewTableUpdate;
+        public string viewIdNow;
+        public bool isAdmin;
         public void ViewFunction(string command, string lastIdCheck, string getTableName)
         {
             deletedLineNumber.Items.Clear();
@@ -85,11 +86,18 @@ namespace Переговорка
         }
         public void addFunction(string command)
         {
-            SqlConnection sqlConnection = new SqlConnection(connection);
-            sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
-            sqlCommand.ExecuteNonQuery();
-            sqlConnection.Close();
+            try
+            {
+                SqlConnection sqlConnection = new SqlConnection(connection);
+                sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
+                sqlCommand.ExecuteNonQuery();
+                sqlConnection.Close();
+            }
+            catch
+            {
+                MessageBox.Show("Попытка удалить администратора");
+            }
         }
 
         private void addType_Click(object sender, EventArgs e)
@@ -127,7 +135,7 @@ namespace Переговорка
             string lastIdCheck = "SELECT COUNT(*)FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Встречи'";
             string getTableName = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Встречи'";
             viewTableCommandNow = " [Встречи] WHERE idMeet";
-            viewTableUpdate = "UPDATE  [Встречи] set idMeet = idMeet-1 Where idMeet > ";
+            viewTableUpdate = "UPDATE  [Встречи] set idMeet = idMeet-1 Where idMeet >";
             viewIdNow = "idMeet";
             ViewFunction(command, lastIdCheck, getTableName);
         }
@@ -159,37 +167,44 @@ namespace Переговорка
             string lastIdCheck = "SELECT COUNT(*)FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Аккаунты'";
             string getTableName = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Аккаунты'";
             viewTableCommandNow = "[Аккаунты] WHERE not idRole = 1 and idAccount ";
-            viewTableUpdate = "UPDATE  [Аккаунты] set idRole = idRole-1 Where idRole > ";
+            viewTableUpdate = "UPDATE  [Аккаунты] set idAccount = idAccount-1 Where idAccount > ";
             viewIdNow = "idAccount";
             ViewFunction(command, lastIdCheck, getTableName);
         }
         private void eraseLine_Click(object sender, EventArgs e)
         {
-            string message = "Вы уверены, что хотите удалить строчку?";
-            string caption = "Удалить строчку";
-            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-            DialogResult result;
-            result = MessageBox.Show(message, caption, buttons);
-            if (result == System.Windows.Forms.DialogResult.Yes)
+            if (accountChoose.Checked != true || deletedLineNumber.Text != User.ping.ToString())
             {
-                string command = "DELETE FROM " + viewTableCommandNow + " = '" + Convert.ToInt32(deletedLineNumber.Text) + "'";
-                addFunction(command);
-                command = viewTableUpdate + Convert.ToInt32(deletedLineNumber.Text);
-                addFunction(command);
-                if (meetChoose.Checked == true)
+                string message = "Вы уверены, что хотите удалить строчку?";
+                string caption = "Удалить строчку";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result;
+                result = MessageBox.Show(message, caption, buttons);
+                if (result == System.Windows.Forms.DialogResult.Yes)
                 {
-                    command = "DELETE FROM Уведомления WHERE idMeet = "+ deletedLineNumber.Text + " " +
-                        "DECLARE @DeletedLines INT " +
-                        "SET @DeletedLines = @@ROWCOUNT " +
-                        "UPDATE[Уведомления] set idPing = idPing - @DeletedLines Where idMeet > " + deletedLineNumber.Text +
-                        "UPDATE  [Уведомления] set idMeet = idMeet-1 Where idMeet > " + deletedLineNumber.Text;
+                    string command = "DELETE FROM " + viewTableCommandNow + " = '" + Convert.ToInt32(deletedLineNumber.Text) + "'";
                     addFunction(command);
-                    meetChoose_CheckedChanged(sender, e);
+                    command = viewTableUpdate + Convert.ToInt32(deletedLineNumber.Text);
+                    addFunction(command);
+                    if (meetChoose.Checked == true)
+                    {
+                        command = "DELETE FROM Уведомления WHERE idMeet = " + deletedLineNumber.Text + " " +
+                            "DECLARE @DeletedLines INT " +
+                            "SET @DeletedLines = @@ROWCOUNT " +
+                            "UPDATE[Уведомления] set idPing = idPing - @DeletedLines Where idMeet > " + deletedLineNumber.Text +
+                            "UPDATE  [Уведомления] set idMeet = idMeet-1 Where idMeet > " + deletedLineNumber.Text;
+                        addFunction(command);
+                        meetChoose_CheckedChanged(sender, e);
+                    }
+                    if (statusChoose.Checked == true) statusChoose_CheckedChanged(sender, e);
+                    if (typeChoose.Checked == true) typeChoose_CheckedChanged(sender, e);
+                    if (roleChooose.Checked == true) roleChoose_CheckedChanged(sender, e);
+                    if (accountChoose.Checked == true) accountChoose_CheckedChanged(sender, e);
                 }
-                if (statusChoose.Checked == true) statusChoose_CheckedChanged(sender, e);
-                if (typeChoose.Checked == true) typeChoose_CheckedChanged(sender, e);
-                if (roleChooose.Checked == true) roleChoose_CheckedChanged(sender, e);
-                if (accountChoose.Checked == true) accountChoose_CheckedChanged(sender, e);
+            }
+            else
+            {
+                MessageBox.Show("Вы не можете удалить себя");
             }
         }
     }
