@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Meeting_room;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Переговорка
+namespace Meeting
 {
     static class Program
     {

@@ -60,9 +60,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Переговорка\Переговорка.csproj">
+    <ProjectReference Include="..\Meeting_room\Meeting room.csproj">
       <Project>{178b69a9-fe8a-4462-8fb2-31b720f8a7e3}</Project>
-      <Name>Переговорка</Name>
+      <Name>Meeting room</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

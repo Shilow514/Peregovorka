@@ -1,5 +1,5 @@
 ﻿
-namespace Переговорка
+namespace Meeting_room
 {
     partial class UserMain
     {
@@ -57,7 +57,7 @@ namespace Переговорка
             this.meetTime.Name = "meetTime";
             this.meetTime.Size = new System.Drawing.Size(136, 20);
             this.meetTime.TabIndex = 0;
-            this.meetTime.ValueChanged += new System.EventHandler(this.meetTime_ValueChanged);
+            this.meetTime.ValueChanged += new System.EventHandler(this.MeetTime_ValueChanged);
             // 
             // panel2
             // 
@@ -118,7 +118,7 @@ namespace Переговорка
             this.meetSearch.Name = "meetSearch";
             this.meetSearch.Size = new System.Drawing.Size(150, 21);
             this.meetSearch.TabIndex = 0;
-            this.meetSearch.SelectedIndexChanged += new System.EventHandler(this.meetSearch_SelectedIndexChanged);
+            this.meetSearch.SelectedIndexChanged += new System.EventHandler(this.MeetSearch_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -151,7 +151,7 @@ namespace Переговорка
             this.pingSearch.TabIndex = 1;
             this.pingSearch.Text = "Место встречи";
             this.pingSearch.UseVisualStyleBackColor = true;
-            this.pingSearch.Click += new System.EventHandler(this.pingSearch_Click);
+            this.pingSearch.Click += new System.EventHandler(this.PingSearch_Click);
             // 
             // buttonBack
             // 
@@ -164,7 +164,7 @@ namespace Переговорка
             this.buttonBack.TabIndex = 0;
             this.buttonBack.Text = "Назад";
             this.buttonBack.UseVisualStyleBackColor = true;
-            this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
+            this.buttonBack.Click += new System.EventHandler(this.ButtonBack_Click);
             // 
             // UserMain
             // 

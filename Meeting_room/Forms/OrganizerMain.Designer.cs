@@ -1,5 +1,5 @@
 ﻿
-namespace Переговорка
+namespace Meeting_room
 {
     partial class OrganizerMain
     {
@@ -216,7 +216,7 @@ namespace Переговорка
             this.sendPing.TabIndex = 10;
             this.sendPing.Text = "Уведомить";
             this.sendPing.UseVisualStyleBackColor = true;
-            this.sendPing.Click += new System.EventHandler(this.sendPing_Click);
+            this.sendPing.Click += new System.EventHandler(this.SendPing_Click);
             // 
             // addMeet
             // 
@@ -228,7 +228,7 @@ namespace Переговорка
             this.addMeet.TabIndex = 9;
             this.addMeet.Text = "Добавить";
             this.addMeet.UseVisualStyleBackColor = true;
-            this.addMeet.Click += new System.EventHandler(this.addPlace_Click);
+            this.addMeet.Click += new System.EventHandler(this.AddPlace_Click);
             // 
             // buttonBack
             // 
@@ -239,7 +239,7 @@ namespace Переговорка
             this.buttonBack.TabIndex = 8;
             this.buttonBack.Text = "Назад";
             this.buttonBack.UseVisualStyleBackColor = true;
-            this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
+            this.buttonBack.Click += new System.EventHandler(this.ButtonBack_Click);
             // 
             // panel3
             // 
@@ -357,6 +357,7 @@ namespace Переговорка
             this.MinimumSize = new System.Drawing.Size(250, 500);
             this.Name = "OrganizerMain";
             this.Padding = new System.Windows.Forms.Padding(5, 0, 5, 5);
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "OrganizerMain";
             this.panel9.ResumeLayout(false);
             this.panel8.ResumeLayout(false);

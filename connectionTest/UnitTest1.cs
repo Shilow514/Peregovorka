@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Переговорка;
+using Meeting_room;
 
 namespace connectionTest
 {
@@ -69,7 +69,7 @@ namespace connectionTest
             string B = "Asdfg123";
             int res = 0;
             Login f = new Login();
-            int m = f.test(A, B);
+            int m = f.Test(A, B);
             Assert.AreEqual(res, m);
         }
     }

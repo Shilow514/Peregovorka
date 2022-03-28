@@ -1,5 +1,5 @@
 ﻿
-namespace Переговорка
+namespace Meeting_room
 {
     partial class Login
     {
@@ -209,7 +209,7 @@ namespace Переговорка
             this.exit.TabIndex = 2;
             this.exit.Text = "Выход";
             this.exit.UseVisualStyleBackColor = true;
-            this.exit.Click += new System.EventHandler(this.exit_Click);
+            this.exit.Click += new System.EventHandler(this.Exit_Click);
             // 
             // groupBox3
             // 
@@ -344,7 +344,6 @@ namespace Переговорка
             this.Padding = new System.Windows.Forms.Padding(5, 0, 5, 5);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
-            this.Load += new System.EventHandler(this.Login_Load);
             this.groupBox1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel4.ResumeLayout(false);

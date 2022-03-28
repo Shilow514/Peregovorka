@@ -8,8 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using Meeting;
 
-namespace Переговорка
+namespace Meeting_room
 {
     public partial class UserMain : Form
     {
@@ -17,12 +18,10 @@ namespace Переговорка
         {
             InitializeComponent();
         }
-        public string connection = "Data Source=PIT29\\SHILOV;Initial Catalog=meeting_db;User ID=sa;Password=123";
-        private void userPing()
+        private void UserPing()
         {
             string messageList = "";
-            string connectionLine = "Data Source=PIT29\\SHILOV;Initial Catalog=meeting_db;User ID=sa;Password=123";
-            SqlConnection connection = new SqlConnection(connectionLine);
+            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
             connection.Open();
             string command = "SELECT * FROM Уведомления";
             SqlCommand query = new SqlCommand(command, connection);
@@ -37,17 +36,17 @@ namespace Переговорка
             }
             foreach(string[] s in data)
             {
-                if (Convert.ToInt32(s[1]) == User.ping)
+                if (Convert.ToInt32(s[1]) == User.Ping)
                 {
                     messageList += "Вас ожидают в комнате " + s[2] + "\n";
                 }
             }
             MessageBox.Show(messageList);
         }
-        private void meetList_AddValue(string command, string lastIdCheck)
+        private void MeetList_AddValue(string command, string lastIdCheck)
         {
             meetList.Items.Clear();
-            SqlConnection sqlConnection = new SqlConnection(connection);
+            SqlConnection sqlConnection = new SqlConnection(User.connectionLine[1].ToString());
             sqlConnection.Open();
             SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, sqlConnection);
             SqlDataReader readerId = sqlLastIdCheck.ExecuteReader();
@@ -86,23 +85,23 @@ namespace Переговорка
             sqlConnection.Close();
             reader.Close();
         }
-        private void meetTime_ValueChanged(object sender, EventArgs e)
+        private void MeetTime_ValueChanged(object sender, EventArgs e)
         {
             meetSearch.Text = "Поиск по дате";
             string command = "SELECT * FROM [Встречи]";
             string lastIdCheck = "SELECT COUNT(*)FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Встречи'";
-            meetList_AddValue(command, lastIdCheck);
+            MeetList_AddValue(command, lastIdCheck);
         }
-        private void buttonBack_Click(object sender, EventArgs e)
+        private void ButtonBack_Click(object sender, EventArgs e)
         {
             this.Hide();
             Login login = new Login();
             login.Show();
         }
 
-        private void pingSearch_Click(object sender, EventArgs e)
+        private void PingSearch_Click(object sender, EventArgs e)
         {
-            userPing();
+            UserPing();
         }
 
         private void UserMain_Load(object sender, EventArgs e)
@@ -111,9 +110,8 @@ namespace Переговорка
             meetSearch.Text = "Поиск по дате";
             string command = "SELECT * FROM [Встречи]";
             string lastIdCheck = "SELECT COUNT(*)FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Встречи'";
-            meetList_AddValue(command, lastIdCheck);
-            string connectionLine = "Data Source=PIT29\\SHILOV;Initial Catalog=meeting_db;User ID=sa;Password=123";
-            SqlConnection connection = new SqlConnection(connectionLine);
+            MeetList_AddValue(command, lastIdCheck);
+            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
             connection.Open();
             string commandStatusTypeAdd = "SELECT idMeet From Встречи";
             SqlCommand query = new SqlCommand(commandStatusTypeAdd, connection);
@@ -127,19 +125,19 @@ namespace Переговорка
             connection.Close();
         }
 
-        private void meetSearch_SelectedIndexChanged(object sender, EventArgs e)
+        private void MeetSearch_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (meetSearch.SelectedIndex == 0)
             {
                 string command = "SELECT * FROM [Встречи]";
                 string lastIdCheck = "SELECT COUNT(*)FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Встречи'";
-                meetList_AddValue(command, lastIdCheck);
+                MeetList_AddValue(command, lastIdCheck);
             }
             else 
             {
                 string command = "SELECT * FROM [Встречи] WHERE idMeet = " + meetSearch.Text;
                 string lastIdCheck = "SELECT COUNT(*)FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Встречи'";
-                meetList_AddValue(command, lastIdCheck);
+                MeetList_AddValue(command, lastIdCheck);
             }
         }
     }

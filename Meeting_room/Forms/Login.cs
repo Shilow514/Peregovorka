@@ -8,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Configuration;
+using Meeting;
 
-namespace Переговорка
+namespace Meeting_room
 {
     public partial class Login : Form
     {
-        ToolTip toolTip = new ToolTip();
         public Login()
         {
             InitializeComponent();
@@ -22,23 +23,9 @@ namespace Переговорка
         {
 
         }
-        public int lastIdCheck(string lastIdCheck)
+        public int Test(string A, string B)
         {
-            string connection = "Data Source=PIT29\\SHILOV;Initial Catalog=meeting_db;User ID=sa;Password=123";
-            SqlConnection sqlConnection = new SqlConnection(connection);
-            sqlConnection.Open();
-            SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, sqlConnection);
-            SqlDataReader readerId = sqlLastIdCheck.ExecuteReader();
-            readerId.Read();
-            int lastId = Convert.ToInt32(readerId[0]);
-            readerId.Close();
-            sqlConnection.Close();
-            return (lastId);
-        }
-        public int test(string A, string B)
-        {
-            string connStr = "Data Source=PIT29\\SHILOV;Initial Catalog=meeting_db;User ID=sa;Password=123";
-            SqlConnection conn = new SqlConnection(connStr);
+            SqlConnection conn = new SqlConnection(User.connectionLine[1].ToString());
             conn.Open();
             string sql = "SELECT * FROM [meeting_db].[dbo].[Аккаунты]";
             SqlCommand command = new SqlCommand(sql, conn);
@@ -57,8 +44,7 @@ namespace Переговорка
         }
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            string connectionLine = "Data Source=PIT29\\SHILOV;Initial Catalog=meeting_db;User ID=sa;Password=123";
-            SqlConnection connection = new SqlConnection(connectionLine);
+            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
             connection.Open();
             string command = "SELECT * FROM [meeting_db].[dbo].[Аккаунты]";
             SqlCommand query = new SqlCommand(command, connection);
@@ -79,9 +65,12 @@ namespace Переговорка
                 {
                     if (LoginPass.Text == s[2])
                     {
+                        Int32.TryParse(s[0], out int idAccount);
+                        Int32.TryParse(s[3], out int idRole);
                         if (s[3] == "1")
                         {
-                            User.ping = Convert.ToInt32(s[0]);
+                            User.Ping = Convert.ToInt32(idAccount);
+                            User.Role = Convert.ToInt32(idRole);
                             MessageBox.Show("Вы вошли как администратор");
                             this.Hide();
                             AdminMain adminMain = new AdminMain();
@@ -89,7 +78,7 @@ namespace Переговорка
                         }
                         if (s[3] == "2")
                         {
-                            User.ping = Convert.ToInt32(s[0]);
+                            User.Ping = Convert.ToInt32(s[idAccount]);
                             MessageBox.Show("Вы успешно вошли");
                             this.Hide();
                             UserMain userMain = new UserMain();
@@ -97,7 +86,7 @@ namespace Переговорка
                         }
                         if (s[3] == "3")
                         {
-                            User.ping = Convert.ToInt32(s[0]);
+                            User.Ping = Convert.ToInt32(s[idAccount]);
                             MessageBox.Show("Вы вошли как инициатор");
                             this.Hide();
                             OrganizerMain organizerMain = new OrganizerMain();
@@ -116,14 +105,13 @@ namespace Переговорка
         private void RegistrationButton_Click(object sender, EventArgs e)
         {
             bool testUserCount = false;
-            string connectionLine = "Data Source=PIT29\\SHILOV;Initial Catalog=meeting_db;User ID=sa;Password=123";
-            SqlConnection connection = new SqlConnection(connectionLine);
+            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
             connection.Open();
             string loginCount = "SELECT [Логин] FROM [dbo].[Аккаунты] WHERE Логин LIKE ('" + registrationName.Text + "')";
             SqlCommand countCommand = new SqlCommand(loginCount, connection);
             SqlDataReader reader = countCommand.ExecuteReader();
             string lastId = "SELECT COUNT(idAccount) From Аккаунты";
-            int id = lastIdCheck(lastId);
+            int id = SqlFunctions.LastIdCheck(lastId);
             if (reader.HasRows == true)
             {
                 testUserCount = true;
@@ -144,15 +132,14 @@ namespace Переговорка
             connection.Close();
         }
 
-        private void exit_Click(object sender, EventArgs e)
+        private void Exit_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
 
-        private void Login_Load(object sender, EventArgs e)
+        private void LoginPass_Enter(object sender, EventArgs e)
         {
-            toolTip.SetToolTip(LoginButton, "Вход в систему");
-            toolTip.SetToolTip(RegistrationButton, "Добавление аккаунта в систему");
+            LoginButton_Click(sender, e);
         }
     }
 }

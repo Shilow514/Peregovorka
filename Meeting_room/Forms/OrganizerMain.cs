@@ -8,8 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Configuration;
 
-namespace Переговорка
+namespace Meeting_room
 {
     public partial class OrganizerMain : Form
     {
@@ -19,10 +20,9 @@ namespace Переговорка
             InitializeComponent();
             OrganizerMain_load();
         }
-        private string connectionLine = "Data Source=PIT29\\SHILOV;Initial Catalog=meeting_db;User ID=sa;Password=123";
         public void OrganizerMain_load()
         {
-            SqlConnection connection = new SqlConnection(connectionLine);
+            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
             connection.Open();
             string commandStatusTypeAdd = "SELECT [Статус встречи],[Тип встречи] FROM [Статус встречи] FULL OUTER JOIN [Тип встречи] ON idStatus = idType";
             SqlCommand query = new SqlCommand(commandStatusTypeAdd, connection);
@@ -36,16 +36,17 @@ namespace Переговорка
             connection.Close();
         }
 
-        private void addPlace_Click(object sender, EventArgs e)
+        private void AddPlace_Click(object sender, EventArgs e)
         {
-            SqlConnection connection = new SqlConnection(connectionLine);
+            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
             connection.Open();
             string commandIdCheck = "SELECT COUNT(*) as count FROM dbo.Встречи";
             SqlCommand lastId = new SqlCommand(commandIdCheck, connection);
             SqlDataReader reader = lastId.ExecuteReader();
             reader.Read();
+            Int32.TryParse(reader[0].ToString(), out int value);
             string command = "INSERT INTO [meeting_db].[dbo].[Встречи](idMeet, [Тип встречи], [Статус встречи], Дата, Место) " +
-                "VALUES ('" + (Convert.ToInt32(reader[0]) + 1) + "', '" + selectType.Text + "', '" + selectStatus.Text +
+                "VALUES ('" + (value + 1) + "', '" + selectType.Text + "', '" + selectStatus.Text +
                 "', '" + date.Value + "', '" + place.Text + "')";
             SqlCommand query = new SqlCommand(command, connection);
             id = Convert.ToInt32(reader[0]) + 1;
@@ -57,16 +58,16 @@ namespace Переговорка
             MessageBox.Show("Встреча успешно добавлена");
         }
 
-        private void buttonBack_Click(object sender, EventArgs e)
+        private void ButtonBack_Click(object sender, EventArgs e)
         {
             this.Hide();
             Login login = new Login();
             login.Show();
         }
 
-        private void sendPing_Click(object sender, EventArgs e)
+        private void SendPing_Click(object sender, EventArgs e)
         {
-            SqlConnection connection = new SqlConnection(connectionLine);
+            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
             connection.Open();
             string commandName = "SELECT idAccount FROM Аккаунты WHERE Логин LIKE('" + userName.Text + "')";
             string commandIdCheck = "SELECT COUNT(*) as count FROM Уведомления";

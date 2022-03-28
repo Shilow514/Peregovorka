@@ -1,5 +1,5 @@
 ﻿
-namespace Переговорка
+namespace Meeting_room
 {
     partial class AdminMain
     {
@@ -56,7 +56,7 @@ namespace Переговорка
             this.panel18 = new System.Windows.Forms.Panel();
             this.eraseLine = new System.Windows.Forms.Button();
             this.deletedLineNumber = new System.Windows.Forms.ComboBox();
-            this.backButton = new System.Windows.Forms.Button();
+            this.BackButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel13.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -123,7 +123,7 @@ namespace Переговорка
             this.accountChoose.TabStop = true;
             this.accountChoose.Text = "Аккаунты";
             this.accountChoose.UseVisualStyleBackColor = true;
-            this.accountChoose.CheckedChanged += new System.EventHandler(this.accountChoose_CheckedChanged);
+            this.accountChoose.CheckedChanged += new System.EventHandler(this.AccountChoose_CheckedChanged);
             // 
             // roleChooose
             // 
@@ -137,7 +137,7 @@ namespace Переговорка
             this.roleChooose.TabStop = true;
             this.roleChooose.Text = "Роли";
             this.roleChooose.UseVisualStyleBackColor = true;
-            this.roleChooose.CheckedChanged += new System.EventHandler(this.roleChoose_CheckedChanged);
+            this.roleChooose.CheckedChanged += new System.EventHandler(this.RoleChoose_CheckedChanged);
             // 
             // statusChoose
             // 
@@ -151,7 +151,7 @@ namespace Переговорка
             this.statusChoose.TabStop = true;
             this.statusChoose.Text = "Статусы";
             this.statusChoose.UseVisualStyleBackColor = true;
-            this.statusChoose.CheckedChanged += new System.EventHandler(this.statusChoose_CheckedChanged);
+            this.statusChoose.CheckedChanged += new System.EventHandler(this.StatusChoose_CheckedChanged);
             // 
             // typeChoose
             // 
@@ -165,7 +165,7 @@ namespace Переговорка
             this.typeChoose.TabStop = true;
             this.typeChoose.Text = "Типы";
             this.typeChoose.UseVisualStyleBackColor = true;
-            this.typeChoose.CheckedChanged += new System.EventHandler(this.typeChoose_CheckedChanged);
+            this.typeChoose.CheckedChanged += new System.EventHandler(this.TypeChoose_CheckedChanged);
             // 
             // meetChoose
             // 
@@ -179,7 +179,7 @@ namespace Переговорка
             this.meetChoose.TabStop = true;
             this.meetChoose.Text = "Встречи";
             this.meetChoose.UseVisualStyleBackColor = true;
-            this.meetChoose.CheckedChanged += new System.EventHandler(this.meetChoose_CheckedChanged);
+            this.meetChoose.CheckedChanged += new System.EventHandler(this.MeetChoose_CheckedChanged);
             // 
             // flowLayoutPanel2
             // 
@@ -249,7 +249,7 @@ namespace Переговорка
             this.addStatus.TabIndex = 0;
             this.addStatus.Text = "Добавить статус";
             this.addStatus.UseVisualStyleBackColor = true;
-            this.addStatus.Click += new System.EventHandler(this.addStatus_Click);
+            this.addStatus.Click += new System.EventHandler(this.AddStatus_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -319,7 +319,7 @@ namespace Переговорка
             this.addType.TabIndex = 0;
             this.addType.Text = "Добавить тип";
             this.addType.UseVisualStyleBackColor = true;
-            this.addType.Click += new System.EventHandler(this.addType_Click);
+            this.addType.Click += new System.EventHandler(this.AddType_Click);
             // 
             // panel2
             // 
@@ -347,7 +347,7 @@ namespace Переговорка
             // 
             this.panel18.Controls.Add(this.eraseLine);
             this.panel18.Controls.Add(this.deletedLineNumber);
-            this.panel18.Controls.Add(this.backButton);
+            this.panel18.Controls.Add(this.BackButton);
             this.panel18.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel18.Location = new System.Drawing.Point(12, 510);
             this.panel18.Name = "panel18";
@@ -364,7 +364,7 @@ namespace Переговорка
             this.eraseLine.TabIndex = 4;
             this.eraseLine.Text = "Удалить строку";
             this.eraseLine.UseVisualStyleBackColor = true;
-            this.eraseLine.Click += new System.EventHandler(this.eraseLine_Click);
+            this.eraseLine.Click += new System.EventHandler(this.EraseLine_Click);
             // 
             // deletedLineNumber
             // 
@@ -375,16 +375,16 @@ namespace Переговорка
             this.deletedLineNumber.Size = new System.Drawing.Size(121, 21);
             this.deletedLineNumber.TabIndex = 3;
             // 
-            // backButton
+            // BackButton
             // 
-            this.backButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.backButton.Location = new System.Drawing.Point(447, 5);
-            this.backButton.Name = "backButton";
-            this.backButton.Size = new System.Drawing.Size(110, 31);
-            this.backButton.TabIndex = 2;
-            this.backButton.Text = "Назад";
-            this.backButton.UseVisualStyleBackColor = true;
-            this.backButton.Click += new System.EventHandler(this.backButton_Click);
+            this.BackButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.BackButton.Location = new System.Drawing.Point(447, 5);
+            this.BackButton.Name = "BackButton";
+            this.BackButton.Size = new System.Drawing.Size(110, 31);
+            this.BackButton.TabIndex = 2;
+            this.BackButton.Text = "Назад";
+            this.BackButton.UseVisualStyleBackColor = true;
+            this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
             // 
             // AdminMain
             // 
@@ -399,6 +399,7 @@ namespace Переговорка
             this.MaximumSize = new System.Drawing.Size(600, 600);
             this.Name = "AdminMain";
             this.Padding = new System.Windows.Forms.Padding(12, 10, 10, 10);
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AdminMain";
             this.panel1.ResumeLayout(false);
             this.panel13.ResumeLayout(false);
@@ -443,7 +444,7 @@ namespace Переговорка
         private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.Button addStatus;
         private System.Windows.Forms.Panel panel18;
-        private System.Windows.Forms.Button backButton;
+        private System.Windows.Forms.Button BackButton;
         private System.Windows.Forms.Button eraseLine;
         private System.Windows.Forms.ComboBox deletedLineNumber;
         private System.Windows.Forms.RadioButton roleChooose;
