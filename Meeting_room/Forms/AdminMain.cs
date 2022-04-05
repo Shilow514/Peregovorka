@@ -41,9 +41,9 @@ namespace Meeting_room
         {
             string lastIdCommand = "SELECT COUNT(*) as count FROM [Статус встречи]";
             int lastId = SqlFunctions.LastIdCheck(lastIdCommand);
-            string command = "INSERT INTO [Тип встречи](idType, [Статус встречи]) VALUES (" + (lastId + 1) + ",'" + statusText.Text + "')";
+            string command = "INSERT INTO [Статус встречи](idStatus, [Статус встречи]) VALUES (" + (lastId + 1) + ",'" + statusText.Text + "')";
             SqlFunctions.AddFunction(command);
-            MessageBox.Show("Тип успешно добавлен");
+            MessageBox.Show("Статус успешно добавлен");
         }
 
         private void RoleChoose_CheckedChanged(object sender, EventArgs e)

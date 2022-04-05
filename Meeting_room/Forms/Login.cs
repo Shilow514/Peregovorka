@@ -21,14 +21,12 @@ namespace Meeting_room
         }
         public void Connect()
         {
-
         }
+        SqlCommand query;
         public int Test(string A, string B)
         {
-            SqlConnection conn = new SqlConnection(User.connectionLine[1].ToString());
-            conn.Open();
             string sql = "SELECT * FROM [meeting_db].[dbo].[Аккаунты]";
-            SqlCommand command = new SqlCommand(sql, conn);
+            SqlCommand command = new SqlCommand(sql, SqlUse.connection);
             SqlDataReader reader = command.ExecuteReader();
             int ADMtest = 0;
             while (reader.Read())
@@ -39,15 +37,14 @@ namespace Meeting_room
                 }
             }
             reader.Close();
-            conn.Close();
+            SqlUse.connection.Close();
             return (ADMtest);
         }
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
-            connection.Open();
+            SqlUse.connection.Open();
             string command = "SELECT * FROM [meeting_db].[dbo].[Аккаунты]";
-            SqlCommand query = new SqlCommand(command, connection);
+            query = new SqlCommand(command, SqlUse.connection);
             SqlDataReader reader = query.ExecuteReader();
             List<string[]> data = new List<string[]>();
             while (reader.Read())
@@ -59,6 +56,7 @@ namespace Meeting_room
                 data[data.Count - 1][3] = reader[3].ToString();
             }
             reader.Close();
+            SqlUse.connection.Close();
             foreach (string[] s in data)
             {
                 if (LoginName.Text == s[1])
@@ -78,7 +76,7 @@ namespace Meeting_room
                         }
                         if (s[3] == "2")
                         {
-                            User.Ping = Convert.ToInt32(s[idAccount]);
+                            User.Ping = Convert.ToInt32(idAccount);
                             MessageBox.Show("Вы успешно вошли");
                             this.Hide();
                             UserMain userMain = new UserMain();
@@ -86,7 +84,7 @@ namespace Meeting_room
                         }
                         if (s[3] == "3")
                         {
-                            User.Ping = Convert.ToInt32(s[idAccount]);
+                            User.Ping = Convert.ToInt32(idAccount);
                             MessageBox.Show("Вы вошли как инициатор");
                             this.Hide();
                             OrganizerMain organizerMain = new OrganizerMain();
@@ -99,37 +97,41 @@ namespace Meeting_room
                     }
                 }
             }
-            connection.Close();
         }
 
         private void RegistrationButton_Click(object sender, EventArgs e)
         {
-            bool testUserCount = false;
-            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
-            connection.Open();
-            string loginCount = "SELECT [Логин] FROM [dbo].[Аккаунты] WHERE Логин LIKE ('" + registrationName.Text + "')";
-            SqlCommand countCommand = new SqlCommand(loginCount, connection);
-            SqlDataReader reader = countCommand.ExecuteReader();
-            string lastId = "SELECT COUNT(idAccount) From Аккаунты";
-            int id = SqlFunctions.LastIdCheck(lastId);
-            if (reader.HasRows == true)
+            if (registrationName.TextLength > 4 && registrationPass.TextLength > 4)
             {
-                testUserCount = true;
-            }
-            reader.Close();
-            if (testUserCount == false)
-            {
-                string command = "INSERT INTO [meeting_db].[dbo].[Аккаунты](idAccount, Логин, Пароль, idRole) VALUES ('" +
-                        (id+1) + "', '" + registrationName.Text + "', '" + registrationPass.Text + "', '2')";
-                SqlCommand query = new SqlCommand(command, connection);
-                query.ExecuteNonQuery();
-                MessageBox.Show("Вы успешно зарегестрироваллись");
+                bool testUserCount = false;
+                string loginCount = "SELECT [Логин] FROM [dbo].[Аккаунты] WHERE Логин LIKE ('" + registrationName.Text + "')";
+                SqlCommand countCommand = new SqlCommand(loginCount, SqlUse.connection);
+                string lastId = "SELECT COUNT(idAccount) From Аккаунты";
+                int id = SqlFunctions.LastIdCheck(lastId);
+                SqlDataReader reader = countCommand.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    testUserCount = true;
+                }
+                reader.Close();
+                if (testUserCount == false)
+                {
+                    string command = "INSERT INTO [meeting_db].[dbo].[Аккаунты](idAccount, Логин, Пароль, idRole) VALUES ('" +
+                            (id + 1) + "', '" + registrationName.Text + "', '" + registrationPass.Text + "', '2')";
+                    SqlCommand query = new SqlCommand(command, SqlUse.connection);
+                    query.ExecuteNonQuery();
+                    MessageBox.Show("Вы успешно зарегестрироваллись");
+                }
+                else
+                {
+                    MessageBox.Show("Данный пользователь уже существует");
+                }
+                SqlUse.connection.Close();
             }
             else
             {
-                MessageBox.Show("Данный пользователь уже существует");
+                MessageBox.Show("Логин и пароль должны содержать более 4 символов");
             }
-            connection.Close();
         }
 
         private void Exit_Click(object sender, EventArgs e)

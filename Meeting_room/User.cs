@@ -11,6 +11,5 @@ namespace Meeting_room
     {
         public static int Ping { get; set; }
         public static int Role { get; set; }
-        public readonly static ConnectionStringSettingsCollection connectionLine = ConfigurationManager.ConnectionStrings;
     }
 }

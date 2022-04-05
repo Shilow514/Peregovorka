@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Configuration;
+using Meeting;
 
 namespace Meeting_room
 {
@@ -22,10 +23,9 @@ namespace Meeting_room
         }
         public void OrganizerMain_load()
         {
-            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
-            connection.Open();
+            SqlUse.connection.Open();
             string commandStatusTypeAdd = "SELECT [Статус встречи],[Тип встречи] FROM [Статус встречи] FULL OUTER JOIN [Тип встречи] ON idStatus = idType";
-            SqlCommand query = new SqlCommand(commandStatusTypeAdd, connection);
+            SqlCommand query = new SqlCommand(commandStatusTypeAdd, SqlUse.connection);
             SqlDataReader reader = query.ExecuteReader();
             while (reader.Read())
             {
@@ -33,26 +33,25 @@ namespace Meeting_room
                 if (reader[1].ToString() != "") selectType.Items.Add(reader[1].ToString());
             }
             reader.Close();
-            connection.Close();
+            SqlUse.connection.Close();
         }
 
         private void AddPlace_Click(object sender, EventArgs e)
         {
-            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
-            connection.Open();
+            SqlUse.connection.Open();
             string commandIdCheck = "SELECT COUNT(*) as count FROM dbo.Встречи";
-            SqlCommand lastId = new SqlCommand(commandIdCheck, connection);
+            SqlCommand lastId = new SqlCommand(commandIdCheck, SqlUse.connection);
             SqlDataReader reader = lastId.ExecuteReader();
             reader.Read();
             Int32.TryParse(reader[0].ToString(), out int value);
             string command = "INSERT INTO [meeting_db].[dbo].[Встречи](idMeet, [Тип встречи], [Статус встречи], Дата, Место) " +
                 "VALUES ('" + (value + 1) + "', '" + selectType.Text + "', '" + selectStatus.Text +
                 "', '" + date.Value + "', '" + place.Text + "')";
-            SqlCommand query = new SqlCommand(command, connection);
+            SqlCommand query = new SqlCommand(command, SqlUse.connection);
             id = Convert.ToInt32(reader[0]) + 1;
             reader.Close();
             query.ExecuteNonQuery();
-            connection.Close();
+            SqlUse.connection.Close();
             sendPing.Enabled = true;
             userName.Enabled = true;
             MessageBox.Show("Встреча успешно добавлена");
@@ -67,12 +66,11 @@ namespace Meeting_room
 
         private void SendPing_Click(object sender, EventArgs e)
         {
-            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
-            connection.Open();
+            SqlUse.connection.Open();
             string commandName = "SELECT idAccount FROM Аккаунты WHERE Логин LIKE('" + userName.Text + "')";
             string commandIdCheck = "SELECT COUNT(*) as count FROM Уведомления";
-            SqlCommand lastId = new SqlCommand(commandIdCheck, connection);
-            SqlCommand setName = new SqlCommand(commandName, connection);
+            SqlCommand lastId = new SqlCommand(commandIdCheck, SqlUse.connection);
+            SqlCommand setName = new SqlCommand(commandName, SqlUse.connection);
             SqlDataReader idReader = lastId.ExecuteReader();
             idReader.Read();
             int idRead = Convert.ToInt32(idReader[0]) + 1;
@@ -82,7 +80,7 @@ namespace Meeting_room
             if (nameReader.HasRows)
             {
                 string command = "INSERT INTO Уведомления(idPing, idAccount, idMeet) VALUES (" + idRead + " ," + Convert.ToInt32(nameReader[0]) + " ," + id + ")";
-                SqlCommand sqlCommand = new SqlCommand(command, connection);
+                SqlCommand sqlCommand = new SqlCommand(command, SqlUse.connection);
                 nameReader.Close();
                 sqlCommand.ExecuteNonQuery();
                 MessageBox.Show("Вы уведомили пользователя");
@@ -92,7 +90,7 @@ namespace Meeting_room
                 MessageBox.Show("Пользователь не найден");
             }
             nameReader.Close();
-            connection.Close();
+            SqlUse.connection.Close();
         }
     }
 }

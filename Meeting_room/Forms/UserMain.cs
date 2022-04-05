@@ -17,43 +17,17 @@ namespace Meeting_room
         public UserMain()
         {
             InitializeComponent();
-        }
-        private void UserPing()
-        {
-            string messageList = "";
-            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
-            connection.Open();
-            string command = "SELECT * FROM Уведомления";
-            SqlCommand query = new SqlCommand(command, connection);
-            SqlDataReader reader = query.ExecuteReader();
-            List<string[]> data = new List<string[]>();
-            while (reader.Read())
-            {
-                data.Add(new string[3]);
-                data[data.Count - 1][0] = reader[0].ToString();
-                data[data.Count - 1][1] = reader[1].ToString();
-                data[data.Count - 1][2] = reader[2].ToString();
-            }
-            foreach(string[] s in data)
-            {
-                if (Convert.ToInt32(s[1]) == User.Ping)
-                {
-                    messageList += "Вас ожидают в комнате " + s[2] + "\n";
-                }
-            }
-            MessageBox.Show(messageList);
-        }
+        }        
         private void MeetList_AddValue(string command, string lastIdCheck)
         {
             meetList.Items.Clear();
-            SqlConnection sqlConnection = new SqlConnection(User.connectionLine[1].ToString());
-            sqlConnection.Open();
-            SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, sqlConnection);
+            SqlUse.connection.Open();
+            SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, SqlUse.connection);
             SqlDataReader readerId = sqlLastIdCheck.ExecuteReader();
             readerId.Read();
             int lastId = Convert.ToInt32(readerId[0]);
             readerId.Close();
-            SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(command, SqlUse.connection);
             SqlDataReader reader = sqlCommand.ExecuteReader();
             List<string[]> data = new List<string[]>();
             while (reader.Read())
@@ -82,7 +56,7 @@ namespace Meeting_room
             {
                 meetList.Items.Add("Ничего не найдено");
             }
-            sqlConnection.Close();
+            SqlUse.connection.Close();
             reader.Close();
         }
         private void MeetTime_ValueChanged(object sender, EventArgs e)
@@ -101,7 +75,7 @@ namespace Meeting_room
 
         private void PingSearch_Click(object sender, EventArgs e)
         {
-            UserPing();
+            SqlFunctions.UserPing();
         }
 
         private void UserMain_Load(object sender, EventArgs e)
@@ -111,10 +85,9 @@ namespace Meeting_room
             string command = "SELECT * FROM [Встречи]";
             string lastIdCheck = "SELECT COUNT(*)FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Встречи'";
             MeetList_AddValue(command, lastIdCheck);
-            SqlConnection connection = new SqlConnection(User.connectionLine[1].ToString());
-            connection.Open();
+            SqlUse.connection.Open();
             string commandStatusTypeAdd = "SELECT idMeet From Встречи";
-            SqlCommand query = new SqlCommand(commandStatusTypeAdd, connection);
+            SqlCommand query = new SqlCommand(commandStatusTypeAdd, SqlUse.connection);
             SqlDataReader reader = query.ExecuteReader();
             meetSearch.Items.Add("Поиск по дате");
             while (reader.Read())
@@ -122,7 +95,7 @@ namespace Meeting_room
                 if (reader[0].ToString() != "") meetSearch.Items.Add(reader[0].ToString());
             }
             reader.Close();
-            connection.Close();
+            SqlUse.connection.Close();
         }
 
         private void MeetSearch_SelectedIndexChanged(object sender, EventArgs e)

@@ -13,42 +13,40 @@ namespace Meeting
     {
         public static int LastIdCheck(string lastIdCheck)
         {
-            SqlConnection sqlConnection = new SqlConnection(User.connectionLine[1].ToString());
-            sqlConnection.Open();
-            SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, sqlConnection);
+            SqlUse.connection.Open();
+            SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, SqlUse.connection);
             SqlDataReader readerId = sqlLastIdCheck.ExecuteReader();
             readerId.Read();
             int lastId = Convert.ToInt32(readerId[0]);
             readerId.Close();
-            sqlConnection.Close();
+            SqlUse.connection.Close();
             return (lastId);
         }
         public static void AddFunction(string command)
         {
             try
             {
-                SqlConnection sqlConnection = new SqlConnection(User.connectionLine[1].ToString());
-                sqlConnection.Open();
-                SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
+                SqlUse.connection.Open();
+                SqlCommand sqlCommand = new SqlCommand(command, SqlUse.connection);
                 sqlCommand.ExecuteNonQuery();
-                sqlConnection.Close();
+                SqlUse.connection.Close();
             }
             catch
             {
                 MessageBox.Show("Попытка удалить администратора");
+                SqlUse.connection.Close();
             }
         }
         public static ComboBox AddToComboBox(string command, string lastIdCheck, ComboBox deletedLineNumber)
         {
             deletedLineNumber.Items.Clear();
-            SqlConnection sqlConnection = new SqlConnection(User.connectionLine[1].ToString());
-            sqlConnection.Open();
-            SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, sqlConnection);
+            SqlUse.connection.Open();
+            SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, SqlUse.connection);
             SqlDataReader readerId = sqlLastIdCheck.ExecuteReader();
             readerId.Read();
             int lastId = Convert.ToInt32(readerId[0]);
             readerId.Close();
-            SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(command, SqlUse.connection);
             SqlDataReader reader = sqlCommand.ExecuteReader();
             List<string[]> data = new List<string[]>();
             int i;
@@ -62,21 +60,20 @@ namespace Meeting
                 deletedLineNumber.Items.Add(reader[0].ToString());
             }
             reader.Close();
-            sqlConnection.Close();
+            SqlUse.connection.Close();
             return (deletedLineNumber);
         }
         public static DataGridView AddToGrid(string command, string lastIdCheck, string getTableName, DataGridView resultView)
         {
             resultView.Rows.Clear();
             resultView.Columns.Clear();
-            SqlConnection sqlConnection = new SqlConnection(User.connectionLine[1].ToString());
-            sqlConnection.Open();
-            SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, sqlConnection);
+            SqlUse.connection.Open();
+            SqlCommand sqlLastIdCheck = new SqlCommand(lastIdCheck, SqlUse.connection);
             SqlDataReader readerId = sqlLastIdCheck.ExecuteReader();
             readerId.Read();
             int lastId = Convert.ToInt32(readerId[0]);
             readerId.Close();
-            SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(command, SqlUse.connection);
             SqlDataReader reader = sqlCommand.ExecuteReader();
             List<string[]> data = new List<string[]>();
             int i;
@@ -89,7 +86,7 @@ namespace Meeting
                 }
             }
             reader.Close();
-            SqlCommand getName = new SqlCommand(getTableName, sqlConnection);
+            SqlCommand getName = new SqlCommand(getTableName, SqlUse.connection);
             reader = getName.ExecuteReader();
             i = 0;
             while (reader.Read())
@@ -104,8 +101,33 @@ namespace Meeting
             {
                 resultView.Rows.Add(s);
             }
-            sqlConnection.Close();
+            SqlUse.connection.Close();
             return (resultView);
+        }
+        public static void UserPing()
+        {
+            string messageList = "";
+            SqlUse.connection.Open();
+            string command = "SELECT * FROM Уведомления";
+            SqlCommand query = new SqlCommand(command, SqlUse.connection);
+            SqlDataReader reader = query.ExecuteReader();
+            List<string[]> data = new List<string[]>();
+            while (reader.Read())
+            {
+                data.Add(new string[3]);
+                data[data.Count - 1][0] = reader[0].ToString();
+                data[data.Count - 1][1] = reader[1].ToString();
+                data[data.Count - 1][2] = reader[2].ToString();
+            }
+            foreach (string[] s in data)
+            {
+                if (Convert.ToInt32(s[1]) == User.Ping)
+                {
+                    messageList += "Вас ожидают в комнате " + s[2] + "\n";
+                }
+            }
+            SqlUse.connection.Close();
+            MessageBox.Show(messageList);
         }
     }
 }
